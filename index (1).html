@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tellwell PC Cheat Sheet</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16232E;         /* deep bookcloth navy */
+    --ink-2:#223343;       /* lighter panel navy */
+    --paper:#EEEAE0;       /* parchment background */
+    --paper-card:#FAF8F3;  /* card surface, slightly lighter than paper */
+    --rule:#DAD3C2;        /* hairline rule on paper */
+    --clay:#4B6E5E;        /* bookcloth green accent */
+    --clay-dark:#3A5749;
+    --gold:#A9822F;        /* foil gold, used sparingly */
+    --ink-text:#20262B;
+    --muted:#6B6355;
+  }
+  html{scroll-padding-top:1rem;}
+  body{
+    background:var(--paper);
+    color:var(--ink-text);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .font-display{font-family:'Source Serif 4',serif;}
+  ::selection{background:var(--gold);color:#fff;}
+
+  /* Sidebar */
+  #sidebar{
+    background:var(--ink);
+    width:260px;
+    transition:transform .25s ease, width .25s ease;
+  }
+  .nav-item{
+    display:flex;align-items:center;gap:.75rem;
+    padding:.65rem .9rem;border-radius:.5rem;
+    color:#C7D0D6;font-size:.875rem;font-weight:500;
+    border-left:3px solid transparent;
+    cursor:pointer;transition:background .15s ease,color .15s ease;
+  }
+  .nav-item:hover{background:rgba(255,255,255,.06);color:#fff;}
+  .nav-item.active{
+    background:rgba(75,110,94,.28);
+    color:#fff;
+    border-left:3px solid var(--gold);
+  }
+  .nav-item svg{flex-shrink:0;width:18px;height:18px;}
+
+  /* Cards */
+  .paper-card{
+    background:var(--paper-card);
+    border:1px solid var(--rule);
+    border-radius:.65rem;
+  }
+  .chip{
+    display:flex;align-items:center;justify-content:space-between;gap:.5rem;
+    padding:.5rem .75rem;border-radius:.4rem;
+    border:1px solid var(--rule);background:#fff;
+    font-size:.8125rem;color:var(--ink-text);
+    transition:border-color .15s ease, transform .1s ease;
+  }
+  .chip:hover{border-color:var(--clay);transform:translateX(2px);}
+  .badge-internal{
+    font-size:.6875rem;font-weight:600;letter-spacing:.02em;
+    color:#8A4A2B;background:#F3E3D6;border:1px solid #E6C8AE;
+    padding:.1rem .45rem;border-radius:.3rem;
+  }
+  .tag{
+    font-size:.6875rem;font-weight:600;padding:.15rem .5rem;border-radius:999px;
+    border:1px solid transparent;
+  }
+
+  /* Accordion */
+  .accordion-body{
+    max-height:0;overflow:hidden;transition:max-height .3s ease;
+  }
+  .accordion-item.open > .accordion-body{max-height:800px;}
+  .accordion-chevron{transition:transform .25s ease;}
+  .accordion-item.open .accordion-chevron{transform:rotate(180deg);}
+
+  /* Category collapse (Tab 1) */
+  .cat-body{max-height:0;overflow:hidden;transition:max-height .3s ease;}
+  .cat-item.open > .cat-body{max-height:2000px;}
+  .cat-chevron{transition:transform .25s ease;}
+  .cat-item.open .cat-chevron{transform:rotate(180deg);}
+
+  /* Timeline */
+  .timeline-line{position:absolute;left:15px;top:2.25rem;bottom:-1.5rem;width:2px;background:var(--rule);}
+  .timeline-dot{
+    width:32px;height:32px;border-radius:999px;background:var(--clay);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;
+    font-family:'Source Serif 4',serif;flex-shrink:0;z-index:1;
+  }
+
+  /* copy toast */
+  .toast{
+    position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%) translateY(1rem);
+    background:var(--ink);color:#fff;font-size:.8125rem;padding:.55rem 1rem;border-radius:.5rem;
+    opacity:0;pointer-events:none;transition:opacity .2s ease, transform .2s ease;z-index:60;
+    box-shadow:0 8px 24px rgba(0,0,0,.25);
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  table.data-table th{
+    cursor:pointer;user-select:none;font-family:'Source Serif 4',serif;
+  }
+  table.data-table th:hover{color:var(--clay-dark);}
+  .sort-arrow{font-size:.65rem;opacity:.55;margin-left:.2rem;}
+
+  .fade-hide{display:none !important;}
+
+  #mobileOverlay{
+    display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:40;
+  }
+  @media (max-width:900px){
+    #sidebar{
+      position:fixed;top:0;left:0;bottom:0;z-index:50;
+      transform:translateX(-100%);
+    }
+    #sidebar.mobile-open{transform:translateX(0);}
+  }
+
+  .video-thumb{
+    aspect-ratio:16/9;background:linear-gradient(135deg,#223343,#16232E);
+    display:flex;align-items:center;justify-content:center;border-radius:.6rem .6rem 0 0;
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div class="flex min-h-screen">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar" class="fixed md:static inset-y-0 left-0 flex flex-col shrink-0 z-50">
+    <div class="px-5 py-6 border-b border-white/10">
+      <div class="font-display text-white text-lg leading-tight">Tellwell</div>
+      <div class="text-[11px] tracking-wide text-[#8FA0AB] mt-0.5">PC Cheat Sheet</div>
+    </div>
+    <nav id="navList" class="flex-1 px-3 py-4 space-y-1 overflow-y-auto"></nav>
+    <div class="px-5 py-4 border-t border-white/10 text-[11px] text-[#7C8D98]">Internal use only</div>
+  </aside>
+  <div id="mobileOverlay" onclick="closeMobileNav()"></div>
+
+  <!-- MAIN -->
+  <div class="flex-1 min-w-0 flex flex-col">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-30 bg-[var(--paper)]/95 backdrop-blur border-b" style="border-color:var(--rule); padding-top:env(safe-area-inset-top,0px);">
+      <div class="flex items-center gap-4 px-4 md:px-8 py-4">
+        <button onclick="openMobileNav()" class="md:hidden p-2 -ml-2 rounded-lg" style="color:var(--ink-text)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <div class="min-w-0">
+          <h1 id="sectionTitle" class="font-display text-xl md:text-2xl" style="color:var(--ink-text)">Consultation Resources</h1>
+          <p id="sectionSub" class="text-xs mt-0.5" style="color:var(--muted)">Links &amp; calculators for every market</p>
+        </div>
+        <div class="ml-auto w-full max-w-xs relative hidden sm:block">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8A8272" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input id="globalSearch" type="text" placeholder="Search this section…"
+            class="w-full pl-9 pr-3 py-2 rounded-lg text-sm bg-white border focus:outline-none focus:ring-2"
+            style="border-color:var(--rule);"
+            oninput="handleSearch(this.value)">
+        </div>
+      </div>
+      <div class="sm:hidden px-4 pb-3 relative">
+        <svg class="absolute left-7 top-1/2 -translate-y-1/2" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8A8272" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" placeholder="Search this section…"
+          class="w-full pl-9 pr-3 py-2 rounded-lg text-sm bg-white border focus:outline-none"
+          style="border-color:var(--rule);"
+          oninput="handleSearch(this.value)">
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="flex-1 px-4 md:px-8 py-6 md:py-8 max-w-6xl w-full mx-auto" style="padding-bottom:env(safe-area-inset-bottom,0px);">
+      <div id="panel-resources"></div>
+      <div id="panel-countries" class="fade-hide"></div>
+      <div id="panel-spiels" class="fade-hide"></div>
+      <div id="panel-invoicing" class="fade-hide"></div>
+      <div id="panel-team" class="fade-hide"></div>
+      <div id="panel-cadences" class="fade-hide"></div>
+      <div id="panel-training" class="fade-hide"></div>
+    </main>
+  </div>
+</div>
+
+<div id="toast" class="toast">Copied!</div>
+
+<!-- video modal -->
+<div id="videoModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 px-4" onclick="if(event.target===this)closeVideoModal()">
+  <div class="paper-card max-w-md w-full p-6 text-center">
+    <div class="font-display text-lg mb-2" id="videoModalTitle" style="color:var(--ink-text)"></div>
+    <p class="text-sm mb-4" style="color:var(--muted)">Video would play here.</p>
+    <button onclick="closeVideoModal()" class="px-4 py-2 rounded-lg text-sm font-medium text-white" style="background:var(--clay)">Close</button>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   DATA — SAMPLE DATA — replace with real sheet export where noted
+   ========================================================= */
+
+const SECTIONS = [
+  {id:'resources', label:'Consultation Resources', sub:'Links & calculators for every market',
+    icon:'<path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07L11.5 4.5"/><path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07L12.5 19.5"/>'},
+  {id:'countries', label:'Country Code Guide', sub:'Dial codes & number formats',
+    icon:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 6 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-6-3.8-9s1.3-6.3 3.8-9z"/>'},
+  {id:'spiels', label:'Spiels', sub:'Ready-to-use scripts by scenario',
+    icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'},
+  {id:'invoicing', label:'Invoicing Guidelines, Policies & Procedures', sub:'Billing rules & payment procedure',
+    icon:'<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M8 8h8M8 12h8M8 16h5"/>'},
+  {id:'team', label:'Company Info & Team Directory', sub:'Departments, roles & contact info',
+    icon:'<circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.5"/><path d="M16 14.2c2.8.5 5 2.6 5 5.8"/>'},
+  {id:'cadences', label:'Cadences / Workflows', sub:'Step-by-step process timelines',
+    icon:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>'},
+  {id:'training', label:'Training / Memos / Tutorial Videos', sub:'Team videos & quick reference links',
+    icon:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9.5v5l4.5-2.5z"/>'}
+];
+
+const consultationData = {
+  marketLinks: {
+    markets:['CAN','USA','AUS','UKI'],
+    subLinks:['Home','Price List','Illustrations Sample | Book Shelf','Terms and Conditions','Blog | News Room','Privacy Policy']
+  },
+  categories: [
+    {title:'Author-Facing Product Literature', internal:false, items:[
+      '2025 Publishing Packages (NEW)','Audiobook','Marketing Services','Publishing Guide','Editing Services',
+      'Editing Services Client Reviews','Author Success Stories','Book Coaching Services','Ghostwriting Services',
+      'Lead Magnets',"How to Write a Children's Book",'How to Publish a Nonfiction Book']},
+    {title:'Zendesk Guide Articles (Author Facing)', internal:false, items:[
+      'Publishing Timeline / Turn-around-time','Production Process Overview','What is Octavo?','Illustrations Guide',
+      'What is the role of my Project Manager?','More articles here! (Tellwell Zendesk)','Printing Resource Center',
+      'Ghostwriting Services FAQs (Internal)','Copyright & Legal Deposit Fact Sheet','Manuscript Development Coaching Info Sheet',
+      'Advance Book Orders (ABO) and Print-Only Projects (POP) Guide','IngramSpark Content Guide (Page 9)','KDP Content Guide']},
+    {title:'Reference Sheets', internal:false, items:[
+      'Tellwell Size Matrix',"IngramSpark's Popular Trim Sizes",'Print Prices (custom binding/paper/specialty)']},
+    {title:'External Guide Articles (Internal Use Only)', internal:true, items:[
+      'Ingram Book Specs',"Ingram's Book Returns Program","Ingram's Global Distribution Web",'Printing Resource Center',
+      'Ingram File Creation Guide',"Tellwell's Guide to Print-Ready Files",'Post-Publication Revisions vs 2nd Edition',
+      'Top 10 Bestselling Titles']},
+    {title:'Production PDF Guides (Author-Facing)', internal:false, items:[
+      'Manuscript Submission Guidelines','Book Set-up Guide / Book Profile Guide','Illustrations Guide',
+      'Book Returns Program Terms and Conditions','Press Release Distribution List','Tellwell Cover Design Guide for Authors',
+      'Trim Size Recommendation & Other Design Basics']},
+    {title:'Product Samples', internal:false, items:[
+      'Cover Samples','Interior Layout Samples (Non-Author Facing)','Illustrations Creation Process',
+      'Marketing Collaterals Samples','Extra Design Time (Design Complexities)','Printing Quote Form']},
+    {title:'Author Website Samples', internal:false, items:[
+      'Basic — soniadischer.com','Basic — angiecollinsburke.com','Advanced — karensibal.com','Advanced — seyoumnigussie.com']}
+  ],
+  calculators: [
+    {name:'Author Compensation Calculator', when:'Author wants an estimate of royalties per copy sold',
+     talk:'Figures are for discussion only; smallest trim size is 5×6; paperback binding is perfect bound (no saddle stitch); hardcover w/ dust jacket uses printed digital cloth, not real cloth; recommend 35% retailer discount for Chapters Indigo consideration.'},
+    {name:'Complexity Calculator', when:'Author wants cost of extra images (30+), block quotes/sidebars, footnotes/endnotes, tables/lists, or indexing',
+     talk:"Image insertions = any non-text JPEG/PNG/TIFF element; enter TOTAL count (don't subtract the 30 included); enter total citations for footnotes/endnotes; enter total terms for index; use the 'TOTAL' row, not the sub-total; invoice line item is 'Extra Design Time', quantity = hours = (total amount ÷ 60)."},
+    {name:'Octavo Print Calculator', when:'Author wants a quote/order for extra copies beyond the publishing package',
+     talk:'Quote is based on specs at time of order (page count, format, size, color); if final book specs differ, cost per copy may change — PM will ask author to adjust quantity or pay the difference; a PC Printing Quote Form must always be issued to the author.'},
+    {name:'Ingram Shipping Calculator', when:"Needed for Octavo calculator's ABO shipping cost field",
+     talk:'Only relevant when Octavo calculator flags "Selected destination and quantity is calculated based on Ingram shipping cost."'}
+  ]
+};
+
+// SAMPLE DATA — replace with real sheet export
+const countryData = [
+  {name:'United States', code:'+1', iso:'US', notes:'10 digits, format (XXX) XXX-XXXX'},
+  {name:'Canada', code:'+1', iso:'CA', notes:'10 digits, shares +1 with US — distinguish by area code list'},
+  {name:'United Kingdom', code:'+44', iso:'GB', notes:'Drop leading 0 when dialing internationally'},
+  {name:'Australia', code:'+61', iso:'AU', notes:'Drop leading 0 when dialing internationally'},
+  {name:'New Zealand', code:'+64', iso:'NZ', notes:'Drop leading 0 when dialing internationally'},
+  {name:'Ireland', code:'+353', iso:'IE', notes:'Drop leading 0 when dialing internationally'},
+  {name:'South Africa', code:'+27', iso:'ZA', notes:'Drop leading 0 when dialing internationally'},
+  {name:'India', code:'+91', iso:'IN', notes:'10 digit mobile numbers, no leading 0'},
+  {name:'Singapore', code:'+65', iso:'SG', notes:'8 digit local numbers, no area codes'},
+  {name:'Philippines', code:'+63', iso:'PH', notes:'Mobile numbers are 10 digits after code'},
+  {name:'Germany', code:'+49', iso:'DE', notes:'Drop leading 0 when dialing internationally'},
+  {name:'France', code:'+33', iso:'FR', notes:'Drop leading 0 when dialing internationally'},
+  {name:'United Arab Emirates', code:'+971', iso:'AE', notes:'Mobile numbers begin with 5'},
+  {name:'Jamaica', code:'+1-876', iso:'JM', notes:'Shares NANP format with +1 countries'}
+];
+
+// SAMPLE DATA — replace with real sheet export
+const spielsData = [
+  {category:'Opening / Greeting Spiels', scripts:[
+    {title:'Standard Inbound Greeting', text:"Hi, thanks for calling Tellwell — this is [Name], one of our Publishing Consultants. I understand you're working on a book — congratulations! Do you have a few minutes so I can learn more about your project and how we can help?"},
+    {title:'Warm Callback (Web Form Lead)', text:"Hi [Author Name], this is [Name] from Tellwell — you'd submitted a request about publishing your book, so I wanted to follow up personally. Is now still a good time to chat for about fifteen minutes?"}
+  ]},
+  {category:'Objection Handling Spiels', scripts:[
+    {title:'Price Objection — Package Comparison', text:"I hear you — investment is a big part of this decision. A lot of authors start where you are. Can I walk you through what's actually included in each package so we can find the best fit for your budget and your goals for the book?"},
+    {title:'"Let Me Think About It"', text:"Of course, this is an important decision and I want you to feel confident. Can I ask what's the biggest question still on your mind — is it the investment, the timeline, or something about the process itself?"},
+    {title:'"I Found It Cheaper Elsewhere"', text:"That's a fair thing to compare. A lot of our authors shop around too. Can I ask what's included in that quote — specifically editing rounds, distribution, and who owns the rights? I want to make sure it's really an apples-to-apples comparison."}
+  ]},
+  {category:'Follow-Up / Re-engagement Spiels', scripts:[
+    {title:'3-Day Silent Follow-Up', text:"Hi [Author Name], just following up after our conversation earlier this week. I know publishing a book is a big decision, so no pressure — I just wanted to check if you had any new questions come up since we spoke."},
+    {title:'Re-engagement After 30 Days', text:"Hi [Author Name], it's been a little while since we last connected about your book. I wanted to check in and see where things stand — is this still something you're planning to move forward with this year?"}
+  ]},
+  {category:'Closing Spiels', scripts:[
+    {title:'Assumptive Close', text:"Based on everything we've talked through, it sounds like the [Package Name] is the right fit to get your book to market the way you're picturing it. Should we go ahead and get your project started today?"},
+    {title:'Timeline-Based Close', text:"Since you mentioned wanting the book out before [target date], we'd need to lock in the schedule this week to hit that. Would you like me to send over the agreement so we can get you into production on time?"}
+  ]},
+  {category:'Refund / Cancellation Spiels', scripts:[
+    {title:'Cancellation Request — Early Stage', text:"I'm sorry to hear you're looking to step away from your project. Before we process anything, can you share a bit about what changed? I want to make sure we've done everything we can to support you first."},
+    {title:'Refund Policy Explanation', text:"I understand, and I want to be transparent with you. Per our policy, deposits become non-refundable once production work has begun, but any milestone not yet started is eligible. Let me pull up your project file so I can walk you through exactly where things stand."}
+  ]}
+];
+
+// SAMPLE DATA — replace with real sheet export
+const invoicingData = [
+  {title:'Payment Terms & Methods', open:true, points:[
+    'Accepted methods: credit card, e-transfer (CAD accounts), and wire transfer for international authors.',
+    'Full payment plans must be paid in full before the final manuscript is sent to print.',
+    'Installment plans are available on packages over $2,500 and must be approved by a Team Lead.',
+    'All invoices are due within 7 days of issue unless otherwise noted on the agreement.']},
+  {title:'Deposit & Milestone Payment Structure', points:[
+    'A 50% deposit is required before production begins on any publishing package.',
+    'The remaining balance is invoiced upon manuscript approval, prior to typesetting.',
+    'Add-on services (extra design time, marketing add-ons) are invoiced separately at time of order.',
+    'Octavo print orders require payment in full before the order is submitted to the printer.']},
+  {title:'Refund Policy', points:[
+    'Deposits are non-refundable once editorial or design work has begun on the project.',
+    'Unused milestone payments (work not yet started) are refundable, minus a 5% processing fee.',
+    'Refund requests must be submitted in writing and reviewed by a Team Lead within 5 business days.',
+    'No refunds are issued once a title has been submitted for distribution (ISBN assigned & live).']},
+  {title:'Late Payment / Overdue Invoice Procedure', points:[
+    'Invoices unpaid after 7 days trigger an automated reminder on day 8 and day 14.',
+    'Production work pauses on any project with a balance more than 14 days overdue.',
+    'PCs should personally follow up by phone once an invoice passes the 10-day mark.',
+    'Accounts 30+ days overdue are escalated to the Accounts team for collections review.']},
+  {title:'Currency & Multicurrency Invoicing Rules', points:[
+    'CAN market authors are invoiced in CAD; USA, AUS, and UKI authors are invoiced in local currency where supported.',
+    'Exchange rate is locked at the rate on the invoice issue date, not the payment date.',
+    'Wire transfers from international authors must cover all bank transfer fees on the sending side.']},
+  {title:'Invoice Correction / Void Procedure', points:[
+    'Never edit a sent invoice directly — void it and issue a corrected version with a note referencing the original.',
+    'Voided invoices must include a one-line reason in the internal notes field for audit purposes.',
+    'Only Team Leads and Accounts staff have permission to void invoices over $1,000.']},
+  {title:'Package Upgrade/Downgrade Billing Rules', points:[
+    'Upgrades are billed as the price difference between packages, prorated against work already completed.',
+    'Downgrades are only permitted before production begins and require Team Lead sign-off.',
+    'Any downgrade after design or editorial work has started forfeits the difference as a change fee.']}
+];
+
+// SAMPLE DATA — replace with real sheet export (Tim Lindsay is the real Founder & CEO)
+const teamData = [
+  {name:'Tim Lindsay', role:'Founder & CEO', dept:'Management', email:'tim.lindsay@tellwell.example', ext:'x100'},
+  {name:'Priya Anand', role:'Team Lead, Publishing Consultants', dept:'Sales/Consultation', email:'priya.anand@tellwell.example', ext:'x212'},
+  {name:'Mitch Anderson', role:'Publishing Consultant', dept:'Sales/Consultation', email:'mitch.anderson@tellwell.example', ext:'x214'},
+  {name:'Dana Whitfield', role:'Publishing Consultant', dept:'Sales/Consultation', email:'dana.whitfield@tellwell.example', ext:'x215'},
+  {name:'Carlos Reyes', role:'Project Manager', dept:'Production', email:'carlos.reyes@tellwell.example', ext:'x230'},
+  {name:'Emily Trainor', role:'Project Manager', dept:'Production', email:'emily.trainor@tellwell.example', ext:'x231'},
+  {name:'Grace Oduya', role:'Senior Editor', dept:'Editorial', email:'grace.oduya@tellwell.example', ext:'x241'},
+  {name:'Noah Fenwick', role:'Manuscript Editor', dept:'Editorial', email:'noah.fenwick@tellwell.example', ext:'x242'},
+  {name:'Layla Haddad', role:'Cover & Interior Designer', dept:'Production', email:'layla.haddad@tellwell.example', ext:'x252'},
+  {name:'Ben Okafor', role:'Marketing Specialist', dept:'Marketing', email:'ben.okafor@tellwell.example', ext:'x263'},
+  {name:'Sofia Marchetti', role:'Marketing Specialist', dept:'Marketing', email:'sofia.marchetti@tellwell.example', ext:'x264'},
+  {name:'Harold Ng', role:'Accounts & Billing Lead', dept:'Management', email:'harold.ng@tellwell.example', ext:'x110'}
+];
+const deptColors = {
+  'Management':'#3A5749','Sales/Consultation':'#8A4A2B','Production':'#39506B','Editorial':'#6B4E8A','Marketing':'#8A7A2B'
+};
+
+// SAMPLE DATA — replace with real sheet export
+const cadenceData = [
+  {name:'New Author Onboarding Cadence', steps:[
+    {title:'Welcome Call', owner:'Publishing Consultant', timing:'Day 1', desc:'PC calls to confirm package, expectations, and next steps after the agreement is signed.'},
+    {title:'Welcome Email & Portal Access', owner:'Publishing Consultant', timing:'Day 1', desc:'Author receives login credentials for the author portal and an onboarding PDF.'},
+    {title:'Project Handoff to PM', owner:'PC → PM', timing:'Day 2', desc:'PC briefs the assigned Project Manager on the author\u2019s goals, timeline, and any special notes.'},
+    {title:'Kickoff Call with PM', owner:'Project Manager', timing:'Day 3–5', desc:'PM introduces themselves, confirms manuscript submission date, and outlines the production roadmap.'},
+    {title:'Manuscript Intake Reminder', owner:'Project Manager', timing:'Week 2', desc:'If manuscript not yet received, PM sends a friendly check-in and offers help with formatting questions.'},
+    {title:'First Check-In Survey', owner:'Project Manager', timing:'Week 3', desc:'Short survey sent to confirm the author feels supported and clarify any open questions.'}
+  ]},
+  {name:'Manuscript-to-Production Workflow', steps:[
+    {title:'Manuscript Received', owner:'Project Manager', timing:'Upon submission', desc:'PM logs the manuscript, checks formatting against the Book Set-up Guide, and confirms word count.'},
+    {title:'Assigned to Editorial', owner:'PM → Editor', timing:'Within 2 business days', desc:'Manuscript routed to the appropriate editor based on genre and package tier.'},
+    {title:'First Editing Pass', owner:'Editor', timing:'2–4 weeks', desc:'Developmental and/or copy edit completed per package; tracked changes returned to author.'},
+    {title:'Author Review Window', owner:'Author', timing:'2 weeks', desc:'Author reviews edits and returns approval or requested changes.'},
+    {title:'Design & Typesetting', owner:'Design Team', timing:'2–3 weeks', desc:'Interior layout and cover design produced per the approved manuscript and brand brief.'},
+    {title:'Proof Review', owner:'Author + PM', timing:'1 week', desc:'Author reviews a full digital proof; PM logs any final corrections.'},
+    {title:'Final File Release', owner:'Project Manager', timing:'Upon proof approval', desc:'Print-ready files released to distribution partners (IngramSpark / KDP / Octavo).'}
+  ]},
+  {name:'Post-Publication Follow-Up Cadence', steps:[
+    {title:'Launch Congratulations Call', owner:'Publishing Consultant', timing:'Day of publication', desc:'PC calls to celebrate the launch and confirm the author has their author copies on order.'},
+    {title:'Marketing Services Check-In', owner:'Marketing Specialist', timing:'Week 1', desc:'Marketing reaches out about press release distribution and available promotional add-ons.'},
+    {title:'30-Day Sales Snapshot', owner:'Publishing Consultant', timing:'Day 30', desc:'PC shares a summary of early sales and ranking data, and discusses next marketing steps.'},
+    {title:'Review Request Nudge', owner:'Marketing Specialist', timing:'Day 45', desc:'Author is prompted to ask early readers for Amazon/Goodreads reviews.'},
+    {title:'Second Edition / Revisions Check-In', owner:'Project Manager', timing:'Month 6', desc:'PM checks in about any post-publication revisions and explains the 2nd edition process if relevant.'}
+  ]}
+];
+
+const videoData = [
+  {title:"The Evolution of Self-Publishing with Tellwell's Founder & CEO Tim Lindsay"},
+  {title:'8 Tips for Choosing the Right Self-Publishing Company for Your Book'},
+  {title:'Debunking 15 Self-Publishing Myths with Tellwell Publishing Consultant Mitch Anderson'},
+  {title:'Is Self-Publishing Legitimate? The Case for Self-Publishing'},
+  {title:'Navigating Vulnerability in Memoir Writing with Self-Published Author Karen Harmon'},
+  {title:'Increase Your Amazon Ranking (And Book Sales!) With These Tips!'},
+  {title:'The Evolution of Book Promotion with Author Karen Cumming'},
+  {title:'7 Marketing Tips to Get Your Children\u2019s Book Noticed!'}
+];
+
+const quickRefLinks = ['Tellwell Size Matrix','Print Prices','Publishing Timeline / Turn-around-time','Production Process Overview','Manuscript Submission Guidelines'];
+
+/* =========================================================
+   NAV + TAB SWITCHING
+   ========================================================= */
+let activeTab = 'resources';
+
+function renderNav(){
+  const nav = document.getElementById('navList');
+  nav.innerHTML = SECTIONS.map(s => `
+    <div class="nav-item ${s.id===activeTab?'active':''}" data-tab="${s.id}" onclick="switchTab('${s.id}')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${s.icon}</svg>
+      <span>${s.label}</span>
+    </div>`).join('');
+}
+
+function switchTab(id){
+  activeTab = id;
+  SECTIONS.forEach(s=>{
+    document.getElementById('panel-'+s.id).classList.toggle('fade-hide', s.id!==id);
+  });
+  document.querySelectorAll('.nav-item').forEach(el=>{
+    el.classList.toggle('active', el.dataset.tab===id);
+  });
+  const sec = SECTIONS.find(s=>s.id===id);
+  document.getElementById('sectionTitle').textContent = sec.label;
+  document.getElementById('sectionSub').textContent = sec.sub;
+  document.querySelectorAll('#globalSearch, input[type="text"]').forEach(i=>{ if(i.id==='globalSearch') i.value=''; });
+  handleSearch('');
+  closeMobileNav();
+}
+
+function openMobileNav(){
+  document.getElementById('sidebar').classList.add('mobile-open');
+  document.getElementById('mobileOverlay').style.display='block';
+}
+function closeMobileNav(){
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('mobileOverlay').style.display='none';
+}
+
+/* =========================================================
+   SEARCH (tab-aware, filters visible content)
+   ========================================================= */
+function handleSearch(qRaw){
+  const q = qRaw.trim().toLowerCase();
+  const root = document.getElementById('panel-'+activeTab);
+  if(!root) return;
+  root.querySelectorAll('[data-search]').forEach(el=>{
+    const hay = el.getAttribute('data-search').toLowerCase();
+    el.classList.toggle('fade-hide', q.length>0 && !hay.includes(q));
+  });
+}
+
+/* =========================================================
+   TOAST + COPY
+   ========================================================= */
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 1500);
+}
+async function copyText(text, btn){
+  try{
+    await navigator.clipboard.writeText(text);
+    showToast('Copied!');
+    if(btn){
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(()=>{ btn.textContent = orig; }, 1500);
+    }
+  }catch(e){
+    showToast('Could not copy');
+  }
+}
+
+/* =========================================================
+   TAB 1 — CONSULTATION RESOURCES
+   ========================================================= */
+function renderResources(){
+  const el = document.getElementById('panel-resources');
+  const marketBlock = `
+    <div class="paper-card p-5 mb-5" data-search="website links by market ${consultationData.marketLinks.markets.join(' ')}">
+      <h3 class="font-display text-base mb-3" style="color:var(--ink-text)">Website Links by Market</h3>
+      <div class="flex flex-wrap gap-2 mb-4" id="marketTabs">
+        ${consultationData.marketLinks.markets.map((m,i)=>`
+          <button onclick="selectMarket(${i})" data-market-btn="${i}"
+            class="px-3 py-1.5 rounded-full text-xs font-semibold border transition"
+            style="${i===0?'background:var(--clay);color:#fff;border-color:var(--clay)':'background:#fff;color:var(--ink-text);border-color:var(--rule)'}">${m}</button>`).join('')}
+      </div>
+      <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-2" id="marketLinksGrid"></div>
+    </div>`;
+
+  const categories = consultationData.categories.map((cat,ci) => `
+    <div class="cat-item paper-card mb-4 ${ci===0?'open':''}" data-search="${cat.title.toLowerCase()} ${cat.items.join(' ').toLowerCase()}">
+      <button class="w-full flex items-center justify-between px-5 py-4" onclick="this.parentElement.classList.toggle('open')">
+        <div class="flex items-center gap-2">
+          <h3 class="font-display text-base" style="color:var(--ink-text)">${cat.title}</h3>
+          ${cat.internal?'<span class="badge-internal">Internal Only</span>':''}
+        </div>
+        <svg class="cat-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="cat-body">
+        <div class="px-5 pb-5 grid sm:grid-cols-2 gap-2 ${cat.internal?'border-t pt-4':''}" style="${cat.internal?'border-color:#E6C8AE':''}">
+          ${cat.items.map(it=>`
+            <div class="chip">
+              <span>${it}</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--clay)" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14L21 3"/></svg>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>`).join('');
+
+  const calcTable = `
+    <div class="paper-card p-5 mb-4" data-search="external calculators author compensation complexity octavo print ingram shipping">
+      <h3 class="font-display text-base mb-4" style="color:var(--ink-text)">External Calculators</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse">
+          <thead>
+            <tr class="text-left border-b" style="border-color:var(--rule)">
+              <th class="py-2 pr-4 font-display" style="color:var(--ink-text)">Calculator Name</th>
+              <th class="py-2 pr-4 font-display" style="color:var(--ink-text)">When to Use It</th>
+              <th class="py-2 font-display" style="color:var(--ink-text)">Talking Points to Remember</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${consultationData.calculators.map(c=>`
+              <tr class="border-b align-top" style="border-color:var(--rule)">
+                <td class="py-3 pr-4 font-medium whitespace-nowrap">${c.name}</td>
+                <td class="py-3 pr-4" style="color:var(--muted); min-width:220px">${c.when}</td>
+                <td class="py-3" style="color:var(--ink-text)">${c.talk}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+
+  el.innerHTML = marketBlock + categories + calcTable;
+  selectMarket(0);
+}
+function selectMarket(i){
+  const grid = document.getElementById('marketLinksGrid');
+  document.querySelectorAll('[data-market-btn]').forEach((b,idx)=>{
+    if(idx===i){ b.style.background='var(--clay)'; b.style.color='#fff'; b.style.borderColor='var(--clay)'; }
+    else { b.style.background='#fff'; b.style.color='var(--ink-text)'; b.style.borderColor='var(--rule)'; }
+  });
+  grid.innerHTML = consultationData.marketLinks.subLinks.map(l=>`
+    <div class="chip"><span>${l}</span>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--clay)" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14L21 3"/></svg>
+    </div>`).join('');
+}
+
+/* =========================================================
+   TAB 2 — COUNTRY CODE GUIDE
+   ========================================================= */
+let countrySort = {key:'name', dir:1};
+function renderCountries(){
+  drawCountryTable();
+}
+function drawCountryTable(){
+  const el = document.getElementById('panel-countries');
+  const rows = [...countryData].sort((a,b)=>{
+    const A=a[countrySort.key].toLowerCase(), B=b[countrySort.key].toLowerCase();
+    return A<B ? -1*countrySort.dir : A>B ? 1*countrySort.dir : 0;
+  });
+  const arrow = k => countrySort.key===k ? (countrySort.dir===1?'▲':'▼') : '';
+  el.innerHTML = `
+    <div class="paper-card p-5">
+      <p class="text-xs mb-4" style="color:var(--muted)">Sample data — replace with a full sheet export. Click a dial code to copy it.</p>
+      <div class="overflow-x-auto">
+        <table class="data-table w-full text-sm border-collapse">
+          <thead>
+            <tr class="text-left border-b" style="border-color:var(--rule)">
+              <th class="py-2 pr-4" onclick="sortCountries('name')">Country <span class="sort-arrow">${arrow('name')}</span></th>
+              <th class="py-2 pr-4" onclick="sortCountries('code')">Dial Code <span class="sort-arrow">${arrow('code')}</span></th>
+              <th class="py-2 pr-4" onclick="sortCountries('iso')">ISO <span class="sort-arrow">${arrow('iso')}</span></th>
+              <th class="py-2">Local Number Pattern Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r=>`
+              <tr class="border-b" style="border-color:var(--rule)" data-search="${r.name.toLowerCase()} ${r.code.toLowerCase()} ${r.iso.toLowerCase()}">
+                <td class="py-2.5 pr-4 font-medium">${r.name}</td>
+                <td class="py-2.5 pr-4">
+                  <button class="chip !inline-flex !w-auto gap-2 py-1 px-2" onclick="copyText('${r.code}', this.querySelector('.copy-label'))">
+                    <span>${r.code}</span>
+                    <span class="copy-label sr-only"></span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--clay)" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="1"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
+                  </button>
+                </td>
+                <td class="py-2.5 pr-4" style="color:var(--muted)">${r.iso}</td>
+                <td class="py-2.5" style="color:var(--ink-text)">${r.notes}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+  handleSearch(document.getElementById('globalSearch').value);
+}
+function sortCountries(key){
+  if(countrySort.key===key) countrySort.dir *= -1;
+  else { countrySort.key = key; countrySort.dir = 1; }
+  drawCountryTable();
+}
+
+/* =========================================================
+   TAB 3 — SPIELS
+   ========================================================= */
+let activeSpielCat = 0;
+function renderSpiels(){
+  const el = document.getElementById('panel-spiels');
+  const tabs = spielsData.map((c,i)=>`
+    <button onclick="selectSpielCat(${i})" data-spiel-tab="${i}"
+      class="px-3 py-1.5 rounded-full text-xs font-semibold border whitespace-nowrap"
+      style="${i===0?'background:var(--clay);color:#fff;border-color:var(--clay)':'background:#fff;color:var(--ink-text);border-color:var(--rule)'}">${c.category}</button>`).join('');
+  el.innerHTML = `
+    <p class="text-xs mb-4" style="color:var(--muted)">Sample scripts — replace with approved live copy.</p>
+    <div class="flex flex-wrap gap-2 mb-5" id="spielTabs">${tabs}</div>
+    <div id="spielCards" class="grid sm:grid-cols-2 gap-4"></div>`;
+  drawSpielCards();
+}
+function selectSpielCat(i){
+  activeSpielCat = i;
+  document.querySelectorAll('[data-spiel-tab]').forEach((b,idx)=>{
+    if(idx===i){ b.style.background='var(--clay)'; b.style.color='#fff'; b.style.borderColor='var(--clay)'; }
+    else { b.style.background='#fff'; b.style.color='var(--ink-text)'; b.style.borderColor='var(--rule)'; }
+  });
+  drawSpielCards();
+}
+function drawSpielCards(){
+  const cat = spielsData[activeSpielCat];
+  document.getElementById('spielCards').innerHTML = cat.scripts.map((s,i)=>`
+    <div class="paper-card p-4 flex flex-col" data-search="${cat.category.toLowerCase()} ${s.title.toLowerCase()} ${s.text.toLowerCase()}">
+      <div class="flex items-start justify-between gap-3 mb-2">
+        <h4 class="font-display text-sm leading-snug" style="color:var(--ink-text)">${s.title}</h4>
+        <button class="text-xs font-semibold px-2.5 py-1 rounded-md shrink-0" style="background:#fff;border:1px solid var(--rule);color:var(--clay-dark)"
+          onclick="copyText(${JSON.stringify(s.text)}, this)">Copy</button>
+      </div>
+      <p class="text-sm leading-relaxed" style="color:var(--ink-text)">${s.text}</p>
+    </div>`).join('');
+  handleSearch(document.getElementById('globalSearch').value);
+}
+
+/* =========================================================
+   TAB 4 — INVOICING
+   ========================================================= */
+function renderInvoicing(){
+  const el = document.getElementById('panel-invoicing');
+  el.innerHTML = invoicingData.map((sec,i)=>`
+    <div class="accordion-item paper-card mb-3 ${sec.open?'open':''}" data-search="${sec.title.toLowerCase()} ${sec.points.join(' ').toLowerCase()}">
+      <button class="w-full flex items-center justify-between px-5 py-4" onclick="this.parentElement.classList.toggle('open')">
+        <h3 class="font-display text-base" style="color:var(--ink-text)">${sec.title}</h3>
+        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="accordion-body">
+        <ul class="px-5 pb-5 space-y-2">
+          ${sec.points.map(p=>`
+            <li class="text-sm flex gap-2" style="color:var(--ink-text)">
+              <span class="mt-1.5 w-1 h-1 rounded-full shrink-0" style="background:var(--gold)"></span>
+              <span>${p}</span>
+            </li>`).join('')}
+        </ul>
+      </div>
+    </div>`).join('');
+}
+
+/* =========================================================
+   TAB 5 — TEAM DIRECTORY
+   ========================================================= */
+let activeDeptFilter = null;
+function renderTeam(){
+  const el = document.getElementById('panel-team');
+  const depts = [...new Set(teamData.map(t=>t.dept))];
+  el.innerHTML = `
+    <div class="flex flex-wrap gap-2 mb-5" id="deptPills">
+      ${depts.map(d=>`
+        <button data-dept="${d}" onclick="toggleDept('${d}')"
+          class="tag" style="border-color:${deptColors[d]}55;color:${deptColors[d]};background:${deptColors[d]}14">${d}</button>`).join('')}
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4" id="teamGrid"></div>`;
+  drawTeamGrid();
+}
+function toggleDept(d){
+  activeDeptFilter = activeDeptFilter===d ? null : d;
+  document.querySelectorAll('#deptPills [data-dept]').forEach(b=>{
+    const on = b.dataset.dept===activeDeptFilter;
+    b.style.outline = on ? '2px solid '+deptColors[b.dataset.dept] : 'none';
+  });
+  drawTeamGrid();
+}
+function drawTeamGrid(){
+  const list = activeDeptFilter ? teamData.filter(t=>t.dept===activeDeptFilter) : teamData;
+  document.getElementById('teamGrid').innerHTML = list.map(t=>`
+    <div class="paper-card p-4" data-search="${t.name.toLowerCase()} ${t.role.toLowerCase()} ${t.dept.toLowerCase()}">
+      <div class="flex items-start justify-between mb-2">
+        <div>
+          <div class="font-display text-base" style="color:var(--ink-text)">${t.name}</div>
+          <div class="text-xs" style="color:var(--muted)">${t.role}</div>
+        </div>
+        <span class="tag" style="border-color:${deptColors[t.dept]}55;color:${deptColors[t.dept]};background:${deptColors[t.dept]}14">${t.dept}</span>
+      </div>
+      <div class="text-xs space-y-1 mt-3 pt-3 border-t" style="border-color:var(--rule); color:var(--ink-text)">
+        <div class="flex items-center gap-1.5"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 6l8 7 8-7"/></svg>${t.email}</div>
+        <div class="flex items-center gap-1.5"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.7a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2z"/></svg>${t.ext}</div>
+      </div>
+    </div>`).join('');
+  handleSearch(document.getElementById('globalSearch').value);
+}
+
+/* =========================================================
+   TAB 6 — CADENCES / WORKFLOWS
+   ========================================================= */
+let activeCadence = 0;
+function renderCadences(){
+  const el = document.getElementById('panel-cadences');
+  const tabs = cadenceData.map((c,i)=>`
+    <button onclick="selectCadence(${i})" data-cadence-tab="${i}"
+      class="px-3 py-1.5 rounded-full text-xs font-semibold border whitespace-nowrap"
+      style="${i===0?'background:var(--clay);color:#fff;border-color:var(--clay)':'background:#fff;color:var(--ink-text);border-color:var(--rule)'}">${c.name}</button>`).join('');
+  el.innerHTML = `
+    <div class="flex flex-wrap gap-2 mb-6" id="cadenceTabs">${tabs}</div>
+    <div id="cadenceTimeline"></div>`;
+  drawCadence();
+}
+function selectCadence(i){
+  activeCadence = i;
+  document.querySelectorAll('[data-cadence-tab]').forEach((b,idx)=>{
+    if(idx===i){ b.style.background='var(--clay)'; b.style.color='#fff'; b.style.borderColor='var(--clay)'; }
+    else { b.style.background='#fff'; b.style.color='var(--ink-text)'; b.style.borderColor='var(--rule)'; }
+  });
+  drawCadence();
+}
+function drawCadence(){
+  const wf = cadenceData[activeCadence];
+  document.getElementById('cadenceTimeline').innerHTML = `
+    <div class="paper-card p-5 md:p-6">
+      ${wf.steps.map((s,i)=>`
+        <div class="relative pl-4 pb-8 last:pb-0 flex gap-4" data-search="${wf.name.toLowerCase()} ${s.title.toLowerCase()} ${s.owner.toLowerCase()} ${s.timing.toLowerCase()}">
+          ${i<wf.steps.length-1 ? '<div class="timeline-line"></div>' : ''}
+          <div class="timeline-dot">${i+1}</div>
+          <div class="min-w-0 flex-1 -mt-0.5">
+            <div class="flex flex-wrap items-center gap-2 mb-1">
+              <h4 class="font-display text-base" style="color:var(--ink-text)">${s.title}</h4>
+              <span class="tag" style="border-color:var(--rule);color:var(--muted);background:#fff">${s.timing}</span>
+            </div>
+            <p class="text-sm mb-1" style="color:var(--ink-text)">${s.desc}</p>
+            <p class="text-xs" style="color:var(--clay-dark)">Owner: ${s.owner}</p>
+          </div>
+        </div>`).join('')}
+    </div>`;
+  handleSearch(document.getElementById('globalSearch').value);
+}
+
+/* =========================================================
+   TAB 7 — TRAINING / MEMOS / VIDEOS
+   ========================================================= */
+function renderTraining(){
+  const el = document.getElementById('panel-training');
+  el.innerHTML = `
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      ${videoData.map(v=>`
+        <div class="paper-card overflow-hidden cursor-pointer" data-search="${v.title.toLowerCase()}" onclick="openVideoModal(${JSON.stringify(v.title)})">
+          <div class="video-thumb">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="#DCE3E7"><circle cx="12" cy="12" r="11" fill="none" stroke="#3E5A6B" stroke-width="1.5"/><path d="M10 8.5v7l6-3.5z"/></svg>
+          </div>
+          <div class="p-3.5">
+            <p class="text-sm leading-snug font-medium" style="color:var(--ink-text)">${v.title}</p>
+            <p class="text-[11px] mt-2" style="color:var(--muted)">Tellwell YouTube Channel</p>
+          </div>
+        </div>`).join('')}
+    </div>
+    <div class="paper-card p-5">
+      <h3 class="font-display text-base mb-3" style="color:var(--ink-text)">Quick Reference Links</h3>
+      <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-2">
+        ${quickRefLinks.map(l=>`
+          <div class="chip" data-search="${l.toLowerCase()}"><span>${l}</span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--clay)" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14L21 3"/></svg>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+function openVideoModal(title){
+  document.getElementById('videoModalTitle').textContent = title;
+  const m = document.getElementById('videoModal');
+  m.classList.remove('hidden'); m.classList.add('flex');
+}
+function closeVideoModal(){
+  const m = document.getElementById('videoModal');
+  m.classList.add('hidden'); m.classList.remove('flex');
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+renderNav();
+renderResources();
+renderCountries();
+renderSpiels();
+renderInvoicing();
+renderTeam();
+renderCadences();
+renderTraining();
+switchTab('resources');
+</script>
+</body>
+</html>
