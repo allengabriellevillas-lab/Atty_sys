@@ -345,17 +345,23 @@ const invoicingData = [
 ];
 
 // SAMPLE DATA — replace with real sheet export (Tim Lindsay is the real Founder & CEO)
-const companyInfo = [
-  ['Name','Tellwell Talent, Inc. (Founded 2015)'],['Headquarters','Victoria, BC (Canada)'],['Satellite Offices','Tellwell International Inc., Cebu, Philippines (Founded 2018)'],['Workforce','60 full time and around 50 contractors'],['Official Address','2031 Store Street, Victoria, BC, V8T 5L9'],['Market Presence','Canada, USA, Australia, UK and major EU countries'],['Corporate Website','tellwellpublishing.com'],['Toll-Free Numbers','1-888-415-1541 (Canada) · 1 (800) 891-4160 (USA) · 61 (1800) 934-224 (Australia) · 44 0800 058 4645 (UKI)'],['Email Contact','contact@tellwellpublishing.com'],['Published Books','More than 4,000 titles from more than 1,500 authors across the globe'],['Founder & CEO','Timothy Lindsay']
-];
 const teamData = [
-  {name:'Mitchel Anderson',dept:'Core Group',email:'publisher@tellwell.ca',ext:'102',location:'Canada',market:'CA'}, {name:'Scott Lunn',dept:'Core Group',email:'scott@tellwell.ca',ext:'104',location:'Canada',market:'CA'}, {name:'Jennifer Chapin',dept:'Core Group',email:'jennifer@tellwell.ca',ext:'105',location:'Canada',market:'CA'}, {name:'Ben Tiso',dept:'Core Group',email:'ben@tellwell.ca',ext:'139',location:'Canada',market:'CA'},
-  {name:'Nelson Ty',dept:'International Team',email:'nelson@tellwellpublishing.com',ext:'141',location:'Cebu',market:'US'}, {name:'Josephine Cataluna',dept:'International Team',email:'josephine@tellwell.com.au',ext:'106',location:'Cebu',market:'AU'}, {name:'Melissa Barker',dept:'International Team',email:'melissa.barker@tellwell.com.au',ext:'149',location:'Australia',market:'AU'}, {name:'Rubby Destura',dept:'International Team',email:'rubby@tellwellpublishing.com',ext:'150',location:'Cebu',market:'UK/EU'}, {name:'Debbie Boy Sumagang',dept:'International Team',email:'debbieboy@tellwellpublishing.com',ext:'153',location:'Cebu',market:'UK/EU'}, {name:'Marjorie Impas',dept:'International Team',email:'marjorie@tellwellpublishing.com',ext:'154',location:'Cebu',market:'UK/EU'}, {name:'Kyle Villaceran',dept:'International Team',email:'kyle@tellwellpublishing.com',ext:'151',location:'Cebu',market:'UK/EU'}
+  {name:'Tim Lindsay', role:'Founder & CEO', dept:'Management', email:'tim.lindsay@tellwell.example', ext:'x100'},
+  {name:'Priya Anand', role:'Team Lead, Publishing Consultants', dept:'Sales/Consultation', email:'priya.anand@tellwell.example', ext:'x212'},
+  {name:'Mitch Anderson', role:'Publishing Consultant', dept:'Sales/Consultation', email:'mitch.anderson@tellwell.example', ext:'x214'},
+  {name:'Dana Whitfield', role:'Publishing Consultant', dept:'Sales/Consultation', email:'dana.whitfield@tellwell.example', ext:'x215'},
+  {name:'Carlos Reyes', role:'Project Manager', dept:'Production', email:'carlos.reyes@tellwell.example', ext:'x230'},
+  {name:'Emily Trainor', role:'Project Manager', dept:'Production', email:'emily.trainor@tellwell.example', ext:'x231'},
+  {name:'Grace Oduya', role:'Senior Editor', dept:'Editorial', email:'grace.oduya@tellwell.example', ext:'x241'},
+  {name:'Noah Fenwick', role:'Manuscript Editor', dept:'Editorial', email:'noah.fenwick@tellwell.example', ext:'x242'},
+  {name:'Layla Haddad', role:'Cover & Interior Designer', dept:'Production', email:'layla.haddad@tellwell.example', ext:'x252'},
+  {name:'Ben Okafor', role:'Marketing Specialist', dept:'Marketing', email:'ben.okafor@tellwell.example', ext:'x263'},
+  {name:'Sofia Marchetti', role:'Marketing Specialist', dept:'Marketing', email:'sofia.marchetti@tellwell.example', ext:'x264'},
+  {name:'Harold Ng', role:'Accounts & Billing Lead', dept:'Management', email:'harold.ng@tellwell.example', ext:'x110'}
 ];
-const slackChannels = [
-  ['#general','Company-wide announcements and work-based matters for all team members.'],['#audiobooks','Audiobook questions, eligibility reviews, project concerns, and coordination with audiobook specialists.'],['#bookmarketingexternal','Marketing service questions, deliverable clarifications, campaign inquiries, and Marketing Coordinator coordination.'],['#consultants','Sales Team announcements, updates, sales discussions, questions, celebrations, wins, feedback, and coaching.'],['#design_requests / #designteam','Print-readiness reviews, design questions, cover inquiries, layout concerns, and design clarification requests.'],['#dev_communication','Octavo and internal-system bug reports, feature requests, technical concerns, and functionality questions.'],['#digital-marketing-support','Lead feedback, appointment concerns, lead-quality questions, CRM clarifications, and digital marketing concerns.'],['#location_log','Shift starts, late arrivals, early departures, breaks, remote-work updates, and internet or power issues.'],['#photos','Team activities, office events, conferences, celebrations, travel photos, milestones, and fun moments.'],['#printing-questions','Printing questions, service clarifications, advance book orders, and print quote requests.'],['#production-questions','Production timelines, fulfillment questions, process clarifications, and service-related concerns.'],['#payment_requests','Alternative payment arrangements, non-standard methods, payment processing assistance, and payment questions requiring review.']
-];
-const deptColors = {'Core Group':'#39506B','International Team':'#3A5749'};
+const deptColors = {
+  'Management':'#3A5749','Sales/Consultation':'#8A4A2B','Production':'#39506B','Editorial':'#6B4E8A','Marketing':'#8A7A2B'
+};
 
 // SAMPLE DATA — replace with real sheet export
 const cadenceData = [
