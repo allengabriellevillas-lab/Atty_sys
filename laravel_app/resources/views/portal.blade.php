@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root { --color-primary:#172B4D; --color-primary-blue:#00bfd3; --color-accent:#F4C542; --color-background:var(--color-background); --color-surface:#F5F6F7; --color-text:#222222; --color-text-muted:#6B7280; --color-border:#E5E7EB; --sidebar-navy-900:#061838; --sidebar-navy-800:#0a2758; --sidebar-navy-700:#123573; --sidebar-teal:#19c3d6; --sidebar-gold:#f4b63f; --sidebar-text:rgba(255,255,255,.9); --sidebar-dim:rgba(255,255,255,.5); --sidebar-divider:rgba(255,255,255,.1); --phone-panel-border:#B9E8EF; --phone-panel-bg-start:#F4FCFE; --phone-panel-bg-end:#EAF8FB; --phone-ink:#172B4D; --phone-body:#334155; --phone-muted:#475569; --phone-icon:#00899C; --phone-icon-bg:#DDF3F5; --phone-number-bg:#D2F0F2; --phone-number-text:#176C78; --phone-example:#135E70; --phone-divider:#B9E8EF; --phone-reminder-border:#C7EAF0; --phone-reminder-bg:rgba(255,255,255,.72); --phone-reminder-divider:#A8DDE6; --hero-sparkle:#00bfd3; }
+    :root { --color-primary:#172B4D; --color-primary-blue:#00bfd3; --color-accent:#F4C542; --color-background:var(--color-background); --color-surface:#F5F6F7; --color-text:#222222; --color-text-muted:#6B7280; --color-border:#E5E7EB; --sidebar-navy-900:#061838; --sidebar-navy-800:#0a2758; --sidebar-navy-700:#123573; --sidebar-teal:#19c3d6; --sidebar-gold:#f4b63f; --sidebar-text:rgba(255,255,255,.9); --sidebar-dim:rgba(255,255,255,.5); --sidebar-divider:rgba(255,255,255,.1); --phone-panel-border:#B9E8EF; --phone-panel-bg-start:#F4FCFE; --phone-panel-bg-end:#EAF8FB; --phone-ink:#172B4D; --phone-body:#334155; --phone-muted:#475569; --phone-icon:#00899C; --phone-icon-bg:#DDF3F5; --phone-number-bg:#D2F0F2; --phone-number-text:#176C78; --phone-example:#135E70; --phone-divider:#B9E8EF; --phone-reminder-border:#C7EAF0; --phone-reminder-bg:rgba(255,255,255,.72); --phone-reminder-divider:#A8DDE6; }
     html {
       overflow-y: scroll;
       scrollbar-gutter: stable;
@@ -118,10 +118,16 @@
     #pageContent .resource-row .open, #pageContent #popular .truncate, #pageContent #recent .truncate { font-size:14px !important; }
     #pageContent .text-\[\#6B7280\] { font-size:13px !important; }
     #pageContent .text-xs, #pageContent .text-\[11px\], #pageContent .text-\[10px\], #pageContent button, #pageContent .listCategory, #pageContent #popular span:last-child, #pageContent #recent span.hidden { font-size:12.5px !important; }
-    .learning-stage-grid { display:grid; gap:8px; grid-template-columns:1fr; }
+    .learning-stage-grid { display:grid; gap:8px 16px; grid-template-columns:1fr; }
     .learning-stage-grid > :last-child { grid-column:span 1; }
     #learning-leads .learning-tier-card:first-child h3::before { display:block; width:max-content; margin-bottom:10px; border-radius:999px; background:var(--color-surface); padding:4px 10px; color:var(--color-primary-blue); content:'Lead statuses'; font-size:12px; font-weight:600; }
-    .learning-inactive-panel { border-top:4px solid; }
+    .learning-inactive-panel { border:1px solid #E5E7EB; background:#F5F6F7; }
+    .learning-opportunity-card > h3 { font-size:18px !important; font-weight:700 !important; }
+    .learning-stage-card { display:block; min-width:0; padding:0; border:0; border-radius:0; background:transparent; box-shadow:none; }
+    .learning-opportunity-card > h3::before { content:none !important; }
+    .learning-stage-card .learning-stage-badge { width:36px; height:36px; }
+    .learning-stage-card p { margin-top:8px; }
+    .learning-inactive-panel h3 { font-size:18px !important; }
     .learning-jump-link:focus-visible { outline:2px solid #00bfd3; outline-offset:2px; }
     @media (min-width:900px) {
       .learning-leads { grid-template-columns:repeat(3,minmax(0,1fr)); }
@@ -132,14 +138,14 @@
       .learning-reassignment-tiles > .learning-reassignment-head { flex:none; }
       .learning-reassignment-tiles > div { flex:1; }
       .learning-opportunities { grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); }
+      #learning-opportunities { margin-left:-14px; width:calc(100% + 14px); }
       .learning-stage-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
-      .learning-stage-grid > :last-child { grid-column:span 2; }
+      .learning-stage-grid > :last-child { grid-column:span 1; }
     }
     @media (min-width:900px) and (max-width:1199px) {
       .learning-leads > :last-child { grid-column:span 2; }
       .learning-opportunities { grid-template-columns:1fr; }
     }
-
     #categoryGrid .resource-row .open, #categoryGrid .resource-row > a { font-size: .875rem; }
     #categoryGrid h3 { font-size: .875rem; }
     #categoryGrid h3 + p { font-size: .75rem; }
@@ -169,6 +175,9 @@
     .app-hero {
       position: relative;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       padding: 24px 160px 24px 32px;
       min-height: 146px;
       border: 1px solid var(--color-border);
@@ -221,13 +230,12 @@
       border-radius: 999px;
       z-index: 0;
       inset: 0;
-      background: linear-gradient(90deg,transparent 58%,rgba(83,190,218,.25)), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='32' viewBox='0 0 28 32'%3E%3Cg fill='none' stroke='%2300bfd3' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M18 2l3 6M24 10l2 6M13 18l-4 2'/%3E%3C/g%3E%3C/svg%3E") right 141px top 5px / 28px 32px no-repeat;
+      background: linear-gradient(90deg,transparent 58%,rgba(83,190,218,.25));
     }
 
     @media (max-width:639px) {
       .app-hero { padding:20px 100px 20px 20px; }
       .app-hero::before { right:12px; width:76px; height:76px; border-width:2px; }
-      .app-hero::after { background-position:right center,right 96px top 5px; }
     }
 
     .app-metric {
@@ -374,6 +382,7 @@
             <div class="icon-ball grid h-14 w-14 place-items-center rounded-full bg-[#F5F6F7] text-[#00bfd3]"><i
                 data-lucide="book-open" class="h-7 w-7"></i></div>
             <div>
+              <p class="text-xs font-bold uppercase tracking-[.18em] text-aus">CONSULTANT TOOLKIT</p>
               <h1 class="text-2xl font-extrabold tracking-tight text-[#172B4D] sm:text-[32px]">Consultation Resources
               </h1>
               <p class="mt-1 text-sm text-[#6B7280] sm:text-base">Everything you need, organized in one place.</p>
@@ -616,13 +625,82 @@
       ['Publishing Consultation — Not Qualified Workflow', ['Introduction / build rapport', 'Must ask questions and assess the core-customer criteria', 'Use the appropriate outcome: foreign-language manuscript, cannot afford, printing only, already signed up, no manuscript / ghostwriting, 6- or 12-month lead, or technologically challenged', 'Update lead status to Low Value or Dead (reason code) and leave pertinent notes', 'Send the 6- or 12-month template when applicable']]
     ];
 
-    let countryDirectory = null, countryDirectoryPromise = null, selectedCountry = null, selectedCountryZone = null, countryClockTimer = null;
-    const countryDirectoryCacheKey = 'tellwell-country-directory-v2';
+    let countryDirectory = null, countryDirectoryPromise = null, phoneNumberParser = null, phoneNumberParserPromise = null, selectedCountry = null, selectedCountryZone = null, countryClockTimer = null;
+    const countryDirectoryCacheKey = 'tellwell-country-directory-v3';
     const countryTimeZonePackageUrl = 'https://cdn.jsdelivr.net/npm/countries-and-timezones@3.10.0/+esm';
     const countryDataUrl = 'https://cdn.jsdelivr.net/npm/world-countries@5.1.0/countries.json';
+    const phoneNumberParserUrl = 'https://cdn.jsdelivr.net/npm/libphonenumber-js@1.12.25/+esm';
     let countryLookupSequence = 0;
     const preferredCountryTimeZones = { AR: 'America/Argentina/Buenos_Aires', AU: 'Australia/Sydney', BR: 'America/Sao_Paulo', CA: 'America/Toronto', GB: 'Europe/London', JP: 'Asia/Tokyo', MX: 'America/Mexico_City', PH: 'Asia/Manila', RU: 'Europe/Moscow', US: 'America/New_York' };
     function normalizeCountryQuery(value) { return String(value || '').trim().toLocaleLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') }
+    async function ensurePhoneNumberParser() {
+      if (phoneNumberParser) return phoneNumberParser;
+      if (!phoneNumberParserPromise) phoneNumberParserPromise = import(phoneNumberParserUrl).then(parser => { phoneNumberParser = parser; return parser }).catch(error => { phoneNumberParserPromise = null; throw error });
+      return phoneNumberParserPromise;
+    }
+    function countryMatches(query, countries, parser) {
+      const normalized = normalizeCountryQuery(query);
+      const exactNames = countries.filter(country => [country.name, ...country.aliases].some(name => normalizeCountryQuery(name) === normalized));
+      if (exactNames.length) return { kind: 'country', message: 'Country name match.', countries: exactNames };
+      const phoneInput = String(query).trim();
+      if (!/^[+\d\s().-]+$/.test(phoneInput)) {
+        const suggestions = countries.filter(country => normalizeCountryQuery(`${country.name} ${country.aliases.join(' ')}`).includes(normalized)).slice(0, 8);
+        return suggestions.length ? { kind: 'suggestion', message: 'Country suggestions; select a country to continue.', countries: suggestions } : { kind: 'invalid', message: 'No country or phone number matched that search.', countries: [] };
+      }
+      const compact = phoneInput.replace(/[\s().-]/g, '');
+      const codeText = compact.replace(/^(?:00|\+)/, '');
+      if (/^(?:\+|00)?\d{1,3}$/.test(compact)) {
+        const exactCode = countries.filter(country => country.callingCodes.includes(codeText));
+        if (exactCode.length) return { kind: 'calling-code', message: exactCode.length > 1 ? 'This calling code is shared; choose a country candidate.' : 'Exact calling-code match.', countries: exactCode };
+      }
+      if (!/^\+?\d+$/.test(compact) && !/^00\d+$/.test(compact)) return { kind: 'invalid', message: 'Use digits with an optional + or 00 prefix and spaces, hyphens, or parentheses.', countries: [] };
+      const international = compact.startsWith('+') || compact.startsWith('00');
+      const normalizedNumber = compact.startsWith('00') ? `+${compact.slice(2)}` : compact;
+      const digits = normalizedNumber.replace(/\D/g, '');
+      if (digits.length < 7) {
+        const candidates = countries.filter(country => country.callingCodes.some(code => code.startsWith(digits) || digits.startsWith(code))).slice(0, 8);
+        return { kind: 'incomplete', message: 'Incomplete number. Suggestions are based on calling codes only; enter more digits.', countries: candidates };
+      }
+      const supported = new Set(parser.getCountries());
+      if (international) {
+        const number = parser.parsePhoneNumberFromString(normalizedNumber);
+        if (!number) return { kind: 'invalid', message: 'This number has an invalid or unsupported international calling code or format.', countries: [] };
+        if (!number.country || !supported.has(number.country)) {
+          const candidates = countries.filter(country => country.callingCodes.includes(number.countryCallingCode));
+          if (candidates.length > 1 && number.isPossible()) return { kind: number.isValid() ? 'ambiguous' : 'ambiguous-possible', message: 'This calling code is shared and the available numbering metadata cannot identify the country reliably. Choose a candidate or enter more context.', countries: candidates.slice(0, 8) };
+          return { kind: 'invalid', message: 'This number has an unsupported international calling code or numbering plan.', countries: [] };
+        }
+        const country = countries.find(item => item.iso2 === number.country);
+        if (!country || !number.isPossible()) return { kind: 'invalid', message: 'This international number is not possible under the available numbering metadata.', countries: [] };
+        const phoneDetails = { input: phoneInput, internationalFormat: number.formatInternational(), type: number.getType() || 'Unknown' };
+        return { kind: number.isValid() ? 'confirmed' : 'possible', message: number.isValid() ? 'Valid international number format; country identified by its numbering plan.' : 'Possible international number format; validity is not confirmed.', countries: [country], phoneDetails };
+      }
+      // A complete Philippine national mobile number has a defined national prefix.
+      // Validate it against PH metadata before considering any other local plans.
+      if (/^09\d{9}$/.test(compact) && supported.has('PH')) {
+        const number = parser.parsePhoneNumberFromString(compact, 'PH');
+        if (number?.country === 'PH' && number.isValid()) {
+          const country = countries.find(item => item.iso2 === 'PH');
+          if (country) return { kind: 'confirmed', message: 'Valid Philippine national mobile number format. This does not confirm that the number is active or assigned.', countries: [country], phoneDetails: { input: phoneInput, internationalFormat: number.formatInternational(), type: number.getType() || 'Unknown' } };
+        }
+        return { kind: 'invalid', message: 'This Philippine mobile number format is not valid under the available numbering metadata.', countries: [] };
+      }
+      const valid = new Map(), possible = new Map();
+      for (const region of supported) {
+        const number = parser.parsePhoneNumberFromString(compact, region);
+        if (!number || number.country !== region) continue;
+        const country = countries.find(item => item.iso2 === region);
+        if (!country || !number.isPossible()) continue;
+        const phoneDetails = { input: phoneInput, internationalFormat: number.formatInternational(), type: number.getType() || 'Unknown' };
+        if (number.isValid()) valid.set(region, { country, phoneDetails });
+        else possible.set(region, { country, phoneDetails });
+      }
+      const matches = valid.size ? [...valid.values()] : [...possible.values()];
+      const kind = valid.size ? (valid.size > 1 ? 'ambiguous' : 'confirmed') : (possible.size > 1 ? 'ambiguous-possible' : 'possible');
+      if (matches.length > 1) return { kind, message: `This local number is ambiguous across ${matches.length} numbering plans. Enter its international calling code (for example, +63) to identify the country reliably.`, countries: [] };
+      if (matches.length === 1) return { kind, message: valid.size ? 'Valid national number format under this numbering plan.' : 'Possible national number format; validity is not confirmed.', countries: [matches[0].country], phoneDetails: matches[0].phoneDetails };
+      return { kind: digits.length < 11 ? 'incomplete' : 'invalid', message: digits.length < 11 ? 'This may be incomplete. Enter more digits or add its +country calling code.' : 'No supported numbering plan recognizes this number.', countries: [] };
+    }
     async function ensureCountryDirectory() {
       if (countryDirectory) return countryDirectory;
       if (!countryDirectoryPromise) countryDirectoryPromise = (async () => {
@@ -637,7 +715,9 @@
           countries = source.map(item => {
             const root = String(item.idd?.root || '').replace(/\D/g, '');
             const suffixes = Array.isArray(item.idd?.suffixes) ? item.idd.suffixes : [''];
-            const rawCallingCodes = root ? [root] : Array.isArray(item.callingCodes) && item.callingCodes.length ? item.callingCodes : suffixes.map(suffix => root + String(suffix || '').replace(/\D/g, '')); const callingCodes = [...new Set(rawCallingCodes.map(code => String(code).replace(/\D/g, '')).filter(Boolean))];
+            // world-countries stores calling codes as idd.root + each idd.suffix.
+            // Keep the full combination (for example +6 + 1 => +61).
+            const rawCallingCodes = root ? suffixes.map(suffix => root + String(suffix || '').replace(/\D/g, '')) : Array.isArray(item.callingCodes) ? item.callingCodes : []; const callingCodes = [...new Set(rawCallingCodes.map(code => String(code).replace(/\D/g, '')).filter(Boolean))];
             return { name: item.name?.common || item.name?.official || '', iso2: item.cca2 || '', iso3: item.cca3 || '', callingCodes, aliases: item.altSpellings || [], flag: item.cca2 ? 'https://flagcdn.com/' + String(item.cca2).toLowerCase() + '.svg' : '' };
           }).filter(country => country.name && country.iso2 && country.callingCodes.length);
           try { localStorage.setItem(countryDirectoryCacheKey, JSON.stringify({ savedAt: Date.now(), countries })); } catch (_) {}
@@ -662,7 +742,7 @@
     function showCountryMatches(match) {
       const result = document.querySelector('#countryResult'); result.className = 'mt-4 rounded-lg border border-[#E5E7EB] bg-white p-2';
       const status = match.kind === 'recognized-ph' ? 'Recognized Philippine number format' : match.kind === 'confirmed' ? 'Valid number format' : match.kind === 'possible' ? 'Possible format' : match.kind === 'ambiguous' ? 'Valid format; country ambiguous' : match.kind === 'ambiguous-possible' ? 'Possible format; country ambiguous' : match.kind === 'calling-code' ? 'Calling-code match' : match.kind === 'suggestion' || match.kind === 'incomplete' ? 'Suggestion only' : 'Country match';
-      result.innerHTML = `<p class="px-3 py-2 text-sm font-semibold text-[#172B4D]">${escapeCountryHtml(match.message)}</p>${match.countries.slice(0, 12).map(country => `<button type="button" class="countryCandidate flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm font-medium text-[#222222] hover:bg-[#F5F6F7]" data-country="${escapeCountryHtml(country.iso2)}" data-match-kind="${escapeCountryHtml(match.kind)}"><img src="${escapeCountryHtml(country.flag)}" alt="" class="h-4 w-6 shrink-0 rounded-sm object-cover"><span class="min-w-0 flex-1">${escapeCountryHtml(country.name)}<span class="ml-2 text-xs text-[#6B7280]">${status}</span></span><span class="text-xs text-[#6B7280]">${escapeCountryHtml(country.callingCodes.map(code => '+' + code).join(', '))}</span></button>`).join('')}`;
+      result.innerHTML = `<p class="px-3 py-2 text-sm font-semibold text-[#172B4D]">${escapeCountryHtml(match.message)}</p>${match.countries.slice(0, 12).map(country => `<button type="button" class="countryCandidate flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm font-medium text-[#222222] hover:bg-[#F5F6F7]" data-country="${escapeCountryHtml(country.iso2)}" data-match-kind="${escapeCountryHtml(match.kind)}"><img src="${escapeCountryHtml(country.flag)}" alt="" class="h-4 w-6 shrink-0 rounded-sm object-cover"><span class="min-w-0 flex-1">${escapeCountryHtml(country.name)}<span class="ml-2 text-xs text-[#6B7280]">${status}</span></span><span class="shrink-0 whitespace-nowrap text-xs text-[#6B7280]">${escapeCountryHtml(country.callingCodes.map(code => '+' + code).join(', '))}</span></button>`).join('')}`;
       if (match.countries.length === 1 && !['suggestion', 'incomplete'].includes(match.kind)) showCountryDetails(match.countries[0], match.kind, match.phoneDetails);
     }
     function countryOffset(timeZone) { try { const value = new Intl.DateTimeFormat('en', { timeZone, timeZoneName: 'longOffset' }).formatToParts(new Date()).find(part => part.type === 'timeZoneName')?.value || 'GMT'; return value === 'GMT' ? 'UTC+00:00' : value.replace(/^GMT/, 'UTC'); } catch (_) { return 'Unavailable'; } }
@@ -685,21 +765,19 @@
       if (!query) { countryResultMessage('Enter a country, calling code, or phone number.', true); input?.focus(); return; }
       countryResultMessage('Searching…');
       try {
-        const apiBasePath = window.location.pathname.endsWith('/') ? window.location.pathname : `${window.location.pathname}/`;
-        const response = await fetch(`${apiBasePath}api/country-lookup?q=${encodeURIComponent(query)}`, { headers: { Accept: 'application/json' } });
-        const match = await response.json();
-        if (!response.ok) throw new Error('Country lookup request failed.');
+        const [countries, parser] = await Promise.all([ensureCountryDirectory(), ensurePhoneNumberParser()]);
+        const match = countryMatches(query, countries, parser);
         if (requestId !== countryLookupSequence || input?.value.trim() !== query) return;
-        if (!match.countries.length || ['invalid', 'parser-unavailable', 'empty'].includes(match.kind)) { countryResultMessage(match.message, true); return; }
+        if (!match.countries.length || match.kind === 'invalid') { countryResultMessage(match.message, true); return; }
         showCountryMatches(match);
-      } catch (_) { if (requestId === countryLookupSequence) countryResultMessage('Country lookup could not be reached. Check your connection and try again.', true); }
+      } catch (_) { if (requestId === countryLookupSequence) countryResultMessage('Country data or the phone-number parser could not be loaded. Check your connection and try again.', true); }
     }
 
     function billingInvoicingPage() {
       const panel = (title, icon, body, extra = '') => `<section id="bill-${title.toLowerCase().replace(/[^a-z]+/g, '-') }" class="card rounded-lg bg-white p-3 ${extra}"><h2 class="mb-2 flex items-center gap-2 text-lg font-extrabold text-ink"><i data-lucide="${icon}" class="h-5 w-5 text-aus"></i>${title}</h2>${body}</section>`;
       const table = (heads, rows, widths = '') => `<div class="overflow-x-auto rounded-md border border-blue-100"><table class="w-full ${widths} text-left text-sm leading-5"><thead class="bg-[#F5F6F7] text-[11px] font-bold uppercase text-[#172B4D]"><tr>${heads.map(h => `<th class="px-3 py-2">${h}</th>`).join('')}</tr></thead><tbody>${rows.map(row => `<tr class="border-t border-blue-50">${row.map(cell => `<td class="px-3 py-2 align-top">${cell}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
-      const discountTable = `<div class="mb-2 flex items-center justify-between gap-2"><span class="text-xs font-semibold text-[#6B7280]">Country</span>${discountMarketPicker()}</div><div class="overflow-x-auto rounded-md border border-blue-100"><table class="w-full text-left text-sm leading-5"><thead class="bg-[#F5F6F7] text-[11px] font-bold uppercase text-[#172B4D]"><tr><th class="px-3 py-2">Invoice</th><th class="px-3 py-2">Cash Disc</th><th class="px-3 py-2">Max Worth of Free Services</th></tr></thead><tbody id="discountGuidelineRows"></tbody></table></div>`;
-      const creditTable = `<div class="mb-2 flex items-center justify-between gap-2"><span class="text-xs font-semibold text-[#6B7280]">Country</span>${creditMarketPicker()}</div><div class="overflow-x-auto rounded-md border border-blue-100"><table class="w-full text-left text-sm leading-5"><thead class="bg-[#F5F6F7] text-[11px] font-bold uppercase text-[#172B4D]"><tr><th class="px-3 py-2">PACKAGE</th><th class="px-3 py-2">CREDITS</th></tr></thead><tbody id="bookCreditRows"></tbody></table></div>`;
+      const discountTable = `<div class="mb-2 flex items-center justify-start gap-2"><span class="text-xs font-semibold text-[#6B7280]">Country</span>${discountMarketPicker()}</div><div class="overflow-x-auto rounded-md border border-blue-100"><table class="w-full text-left text-sm leading-5"><thead class="bg-[#F5F6F7] text-[11px] font-bold uppercase text-[#172B4D]"><tr><th class="px-3 py-2">Invoice</th><th class="px-3 py-2">Cash Disc</th><th class="px-3 py-2">Max Worth of Free Services</th></tr></thead><tbody id="discountGuidelineRows"></tbody></table></div>`;
+      const creditTable = `<div class="mb-2 flex items-center justify-start gap-2"><span class="text-xs font-semibold text-[#6B7280]">Country</span>${creditMarketPicker()}</div><div class="overflow-x-auto rounded-md border border-blue-100"><table class="w-full text-left text-sm leading-5"><thead class="bg-[#F5F6F7] text-[11px] font-bold uppercase text-[#172B4D]"><tr><th class="px-3 py-2">PACKAGE</th><th class="px-3 py-2">CREDITS</th></tr></thead><tbody id="bookCreditRows"></tbody></table></div>`;
       const freeRows = [['Hardcover','Media Kit','Premium Cover Design Service'],['Enhanced Amazon','Expedited Editing','Author Website - Basic'],['Promotional','Editorial Evaluation','Upgrade to Author Website - Advanced'],['Book Back Cover','Book Marketing','eBook Distribution'],['Kindle eBook','Social Media','ARC Landing Page'],['Kobo eBook','Press Release','Print Ready Files'],['Activity Sheet','Coloring Sheet','Social Media Graphics - 5']];
       const standAloneServiceRows = [['Editing Services','Editing Only Package','Just Editing Only Package + Actual Editing Service','Manuscript in MS Word format.'],['eBook Distribution Service','eBook Only Package','eBook Complete Package and eBook formatting must be logged together.','High-resolution file of book cover and manuscript in MS Word format. If author has PDF/MOBI/EPUB files, better.'],['Printing Services','Printing Only Package','Minimum order for paperback and hardback is 250 copies; for board books is 1,000 copies; for other specialty formats/printing please post in #printing-questions; $250 admin added to the entire invoice.','High-resolution print-ready file. PRF must be checked by design team before closing sale.'],['Illustrations Services','Illustrations Only Package','Illustrations Bundle 1 or 2 plus 2 hrs Project Management Fee',''],['Marketing Services','Marketing Only Package','Minimum of $2,000 CAD/ $2,500 AUD or 1,500 USD/1,500 EUR or 1,000 GBP. Must be settled in full. Must had Book Marketing Consultation and Strategy service.','High-resolution file of book cover and/or PDF file of book.'],['Writing Services','Ghostwriting Only Package/ Book Coaching Only Package','Just Ghostwriting/Book Coaching Only Package + Actual Service',''],['Design Services','Design Only Package','Cover Design and/or Interior Layout','']];
       const canadaTaxRates = [['Alberta',5],['British Columbia',5],['Manitoba',5],['New Brunswick',15],['Nfld and Labrador',15],['Northwest Territories',5],['Nova Scotia',15],['Nunavut',5],['Ontario',13],['Prince Edward Island',15],['Quebec',5],['Saskatchewan',5],['Yukon',5]];
@@ -1188,7 +1266,7 @@
       const leadTags = leadTaggingGuide.map(([tag, detail]) => `<div class="learning-lead-row"><dt class="text-xs font-extrabold uppercase tracking-wide text-ink">${tag}</dt><dd class="text-sm leading-5 text-[#6B7280]">${detail}</dd></div>`).join('');
       const reassignment = reassignmentGuides.map((guide, index) => { const dateRange = index === 0 ? 'Before April 1, 2022' : 'April 1, 2022 and after'; return `<article class="learning-tier-card learning-reassignment-card card h-full rounded-xl bg-white p-5"><span class="inline-flex self-start rounded-full border border-blue-100 px-2.5 py-1 text-xs font-bold text-aus">${dateRange}</span><h3 class="mt-3 text-base font-extrabold text-ink">Reassignment guide: ${guide.title}</h3><div class="learning-reassignment-tiles mt-4"><div class="learning-reassignment-head"><span>Lead status</span><span>And the age is</span></div>${guide.rows.map(([status, age]) => `<div><p class="text-xs font-bold uppercase tracking-wide text-[#6B7280]">${status}</p><p class="mt-1 text-base font-extrabold leading-5 text-ink">${age}</p></div>`).join('')}</div>${guide.note ? `<p class="mt-auto pt-4 text-xs leading-5 text-[#6B7280]">${guide.note}</p>` : ''}</article>` }).join('');
       const stages = opportunityStages.map(([number, detail], index) => `<article class="learning-stage-card"><span class="learning-stage-badge grid h-9 w-9 place-items-center rounded-lg text-lg font-extrabold text-white" style="background:${['#172B4D','#00bfd3','#F4C542','#172B4D','#00bfd3','#F4C542','#172B4D'][index]}">${number}</span><p class="mt-2 text-sm leading-5 text-[#6B7280]">${detail}</p></article>`).join('');
-      const inactive = inactiveOpportunityGuides.map(([label, intro, reasons], index) => `<article class="learning-inactive-panel rounded-lg border border-blue-50 bg-[#F5F6F7] p-4" style="border-top-color:${index ? '#00bfd3' : '#172B4D'}"><h3 class="inline-block rounded-xl px-4 py-2 text-xl font-extrabold text-white" style="background:${index ? '#00bfd3' : '#172B4D'}">${label}</h3><p class="mt-3 text-sm leading-5 text-[#6B7280]">${intro}</p><ul class="mt-3 list-disc space-y-1 pl-5 text-sm text-[#6B7280]">${reasons.map(reason => `<li>${reason}</li>`).join('')}</ul></article>`).join('');
+      const inactive = inactiveOpportunityGuides.map(([label, intro, reasons], index) => `<article class="learning-inactive-panel rounded-lg border p-4"><h3 class="inline-block rounded-xl px-4 py-2 text-xl font-extrabold text-white" style="background:${index ? '#00bfd3' : '#172B4D'}">${label}</h3><p class="mt-3 text-sm leading-5 text-[#6B7280]">${intro}</p><ul class="mt-3 list-disc space-y-1 pl-5 text-sm text-[#6B7280]">${reasons.map(reason => `<li>${reason}</li>`).join('')}</ul></article>`).join('');
       return `<section><div class="app-hero rounded-2xl px-6 py-7 sm:px-8"><div class="relative z-10 flex flex-col gap-5 lg:flex-row lg:items-end"><div class="flex-1"><p class="text-xs font-bold uppercase tracking-[.18em] text-aus">Learning centre</p><h1 class="mt-1 text-3xl font-extrabold text-ink">Learning & Resources</h1><p class="mt-2 max-w-3xl text-sm leading-6 text-[#6B7280]">Training guides, tutorials, and policy documents from the Training/Memos/Tutorial Videos spreadsheet.</p></div><nav class="flex shrink-0 gap-2" aria-label="Learning & Resources sections"><a class="learning-jump-link rounded-lg border border-blue-100 bg-white px-3 py-2 text-xs font-bold text-ink hover:bg-blue-50" href="#learning-leads">1 Leads</a><a class="learning-jump-link rounded-lg border border-blue-100 bg-white px-3 py-2 text-xs font-bold text-ink hover:bg-blue-50" href="#learning-opportunities">2 Opportunities</a></nav></div></div><section id="learning-leads" class="mt-5"><div class="learning-tier-cards learning-leads mt-0"><article class="learning-tier-card card h-full rounded-xl bg-white p-5"><h3 class="text-base font-extrabold text-ink">A Quick Guide to Proper Lead Tagging</h3><dl class="learning-lead-rows mt-3">${leadTags}</dl></article>${reassignment}</div></section><section id="learning-opportunities" class="mt-7"><div class="learning-tier-cards learning-opportunities mt-0"><article class="learning-tier-card learning-opportunity-card card rounded-xl bg-white p-5"><h3 class="text-base font-extrabold text-ink">A Quick Guide to Proper Opportunity Stage Tagging</h3><div class="learning-stage-grid mt-4">${stages}</div></article><article class="learning-tier-card learning-opportunity-card card rounded-xl bg-white p-5"><h3 class="text-base font-extrabold text-ink">A Quick Guide to Tagging Inactive/Lost Opportunities</h3><div class="learning-inactive-grid">${inactive}</div></article></div></section><section class="mt-6"><h2 class="mb-3 text-lg font-extrabold text-ink">Video &amp; Written Tutorials</h2><div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">${trainingVideos.map(([title, url]) => `<a href="${url}" target="_blank" rel="noopener noreferrer" class="card overflow-hidden rounded-xl bg-white transition hover:-translate-y-0.5 hover:shadow-soft"><div class="flex aspect-video items-center justify-center bg-gradient-to-br from-[#223343] to-[#16232e]"><span class="grid h-9 w-9 items-center justify-center rounded-full border-2 border-[#42657b] text-[#dce3e7]"><i data-lucide="play" class="ml-0.5 h-4 w-4 fill-current"></i></span></div><div class="p-4"><h3 class="text-sm font-bold leading-5 text-ink">${title}</h3><p class="mt-2 text-xs text-[#172B4D]">Open tutorial <i data-lucide="external-link" class="ml-1 inline h-3 w-3"></i></p></div></a>`).join('')}</div></section><section class="card mt-6 rounded-xl bg-white p-5"><h2 class="text-base font-extrabold text-ink">Policy Resource Documents</h2><div class="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">${trainingPolicies.map(([title, url]) => `<a href="${url}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between rounded-lg border border-blue-100 bg-[#F5F6F7] px-3 py-2.5 text-sm font-semibold text-[#000000] hover:bg-blue-50"><span>${title}</span><i data-lucide="external-link" class="h-4 w-4 shrink-0 text-aus"></i></a>`).join('')}</div></section></section>`;
     }
     function trainingPage() {
@@ -1239,11 +1317,11 @@
 .wrap { display:flex; width:100%; max-width:none; margin:0; gap:24px; background:transparent!important; border:0!important; box-shadow:none!important; }
 .app-hero { position:relative; overflow:hidden; display:flex; width:100%; min-height:146px; flex-direction:column; justify-content:center; gap:10px; margin:0 0 24px; border:1px solid #E5E7EB; border-radius:16px; background:linear-gradient(110deg,#FFFFFF 0%,#FBFEFE 48%,#DDF5F8 72%,#62BFDC 100%); padding:24px 160px 24px 32px; box-shadow:0 12px 28px rgba(25,91,171,.08); }
 .app-hero::before { content:''; position:absolute; z-index:1; top:50%; right:24px; width:110px; height:110px; transform:translateY(-50%); border:3px solid #fff; border-radius:50%; background:#fff url('/assets/book-circle.webp') center/cover no-repeat; box-shadow:0 4px 14px rgba(21,38,43,.18); }
-.app-hero::after { content:''; position:absolute; z-index:0; inset:0; background:linear-gradient(90deg,transparent 58%,rgba(83,190,218,.25)),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='32' viewBox='0 0 28 32'%3E%3Cg fill='none' stroke='%2300bfd3' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M18 2l3 6M24 10l2 6M13 18l-4 2'/%3E%3C/g%3E%3C/svg%3E") right 141px top 5px/28px 32px no-repeat; }
+.app-hero::after { content:''; position:absolute; z-index:0; inset:0; background:linear-gradient(90deg,transparent 58%,rgba(83,190,218,.25)); }
 .app-hero .eyebrow { margin:0; color:#00BFD3; font-size:12px; font-weight:700; letter-spacing:.18em; line-height:1.2; text-transform:uppercase; }
-.app-hero h1 { margin:4px 0 0; color:#172B4D; font-family:Manrope,sans-serif; font-size:30px; font-weight:800; line-height:1.2; }
+.app-hero h1 { margin:4px 0 0; width:auto; margin-left:0; color:#172B4D; font-family:Manrope,sans-serif; font-size:30px; font-weight:800; line-height:1.2; text-align:left; }
 .app-hero .lede { max-width:64ch; margin:0; color:#6B7280; font-size:14px; line-height:1.5; }
-@media(max-width:639px) { .app-hero { padding:20px 100px 20px 20px; } .app-hero::before { right:12px; width:76px; height:76px; border-width:2px; } .app-hero::after { background-position:right center,right 96px top 5px; } }
+@media(max-width:639px) { .app-hero { padding:20px 100px 20px 20px; } .app-hero::before { right:12px; width:76px; height:76px; border-width:2px; }  }
 .agenda,.flow,.stop,.checklist,.who,.prep,.g,.lp,.g-price,.g-never { border-color:#E5E7EB; border-radius:12px; box-shadow:0 7px 18px rgba(25,91,171,.07); }
 .wrap > .who { display:flex; align-self:stretch; width:100%; max-width:none; box-sizing:border-box; }
 .wrap > .who p { width:100%; max-width:none; }
