@@ -808,7 +808,7 @@
             <h3>Profile photo</h3>
             <p>JPG, PNG or WebP. Max 2 MB.</p>
             <div class="ps-btns">
-              <button class="ps-btn g s" id="profile-up" type="button"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg>Upload new photo</button>
+              <button class="ps-btn g s" id="profile-up" type="button"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg>Upload</button>
               <button class="ps-btn d s" id="profile-rmv" type="button" hidden>Remove</button>
             </div>
             <input type="file" id="profile-file" accept="image/png,image/jpeg,image/webp" hidden>
@@ -862,8 +862,8 @@
     <div class="ps-mf">
       <span class="ps-note" id="profile-note">No changes</span>
       <button class="ps-btn g" id="profile-cancel" type="button">Cancel</button>
-      <button class="ps-btn p" id="profile-save" type="button" disabled>Save changes</button>
-      <button class="ps-btn p" id="profile-upd" type="button" disabled style="display:none">Update password</button>
+      <button class="ps-btn p" id="profile-save" type="button" disabled>Save</button>
+      <button class="ps-btn p" id="profile-upd" type="button" disabled style="display:none">Update</button>
     </div>
   </div>
 </div>
@@ -2251,6 +2251,29 @@ document.addEventListener('change', e => { if (e.target.dataset.workflowCheck) w
     if (categoryGrid) { resourceIconObserver.observe(categoryGrid, { childList: true, subtree: true }); repairResourceIcons(); }
     render();
   </script>
+<div class="ps-scrim" id="signout-confirm" role="dialog" aria-modal="true" aria-labelledby="signout-title" aria-describedby="signout-description">
+  <div class="ps-modal" style="height:auto;max-height:calc(100vh - 40px);max-width:420px;padding:24px;gap:16px">
+    <div><p class="ps-eyebrow">ACCOUNT</p><h2 id="signout-title" style="margin:0;color:var(--head);font:800 22px/1.2 var(--font)">Sign out?</h2><p id="signout-description" style="margin:10px 0 0;color:var(--muted);font-size:14px">Are you sure you want to sign out?</p></div>
+    <div style="display:flex;justify-content:flex-end;gap:10px"><button class="ps-btn g" id="signout-cancel" type="button">Cancel</button><button class="ps-btn d" id="signout-confirm-button" type="button">Sign out</button></div>
+  </div>
+</div>
+<script>
+(() => {
+  const form = document.querySelector('.sidebar-logout');
+  const dialog = document.getElementById('signout-confirm');
+  const cancel = document.getElementById('signout-cancel');
+  let confirmed = false;
+  const closeDialog = () => { dialog.classList.remove('open'); form.querySelector('button').focus(); };
+  form.addEventListener('submit', event => {
+    if (confirmed) { confirmed = false; return; }
+    event.preventDefault(); dialog.classList.add('open'); cancel.focus();
+  });
+  cancel.addEventListener('click', closeDialog);
+  document.getElementById('signout-confirm-button').addEventListener('click', () => { confirmed = true; form.requestSubmit(); });
+  dialog.addEventListener('click', event => { if (event.target === dialog) closeDialog(); });
+  document.addEventListener('keydown', event => { if (event.key === 'Escape' && dialog.classList.contains('open')) closeDialog(); });
+})();
+</script>
 </body>
 
 </html>
